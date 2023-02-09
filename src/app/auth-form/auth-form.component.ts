@@ -8,6 +8,7 @@ import { User } from './auth-form.interface';
     <div>
       <form (ngSubmit)="onSubmit(form.value)" #form="ngForm">
         <ng-content></ng-content>
+        <!-- This is where the h3 in app.component is projected in -->
         <label>
           Email address
           <input type="email" name="email" ngModel />
