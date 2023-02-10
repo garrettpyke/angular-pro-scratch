@@ -7,7 +7,7 @@ import { User } from './auth-form.interface';
   template: `
     <div>
       <form (ngSubmit)="onSubmit(form.value)" #form="ngForm">
-        <ng-content></ng-content>
+        <ng-content select="h3"></ng-content>
         <!-- This is where the h3 in app.component is projected in -->
         <label>
           Email address
@@ -17,16 +17,17 @@ import { User } from './auth-form.interface';
           Password
           <input type="password" name="password" ngModel />
         </label>
-        <button type="submit">Submit</button>
+        <ng-content select="auth-remember"></ng-content>
+        <ng-content select="button"></ng-content>
       </form>
     </div>
   `,
   styles: [``],
 })
-export class AuthFormComponent implements OnInit {
+export class AuthFormComponent {
   constructor() {}
 
-  ngOnInit(): void {}
+  // ngOnInit(): void {}
 
   @Output() submitted: EventEmitter<User> = new EventEmitter<User>();
 
