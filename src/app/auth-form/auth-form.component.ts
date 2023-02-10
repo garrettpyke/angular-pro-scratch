@@ -1,13 +1,17 @@
 import {
   Component,
-  OnInit,
+  DoCheck,
   Output,
+  ViewChild,
+  AfterViewInit,
   EventEmitter,
-  ContentChild,
+  QueryList,
+  ContentChildren,
   AfterContentInit,
 } from '@angular/core';
 
 import { AuthRememberComponent } from './auth-remember.component';
+import { AuthMessageComponent } from './auth-message.component';
 
 import { User } from './auth-form.interface';
 
@@ -27,28 +31,54 @@ import { User } from './auth-form.interface';
           <input type="password" name="password" ngModel />
         </label>
         <ng-content select="auth-remember"></ng-content>
-        <div *ngIf="showMessage">You will be logged in for 7 days</div>
+        <auth-message [style.display]="showMessage ? 'inherit' : 'none'">
+        </auth-message>
         <ng-content select="button"></ng-content>
       </form>
     </div>
   `,
   styles: [``],
 })
-export class AuthFormComponent implements AfterContentInit {
+export class AuthFormComponent
+  implements DoCheck, AfterContentInit, AfterViewInit
+{
   constructor() {}
 
   showMessage: boolean;
 
-  @ContentChild(AuthRememberComponent) remember: AuthRememberComponent;
+  // a view child queries the view we're currently inside
+  @ViewChild(AuthMessageComponent) message: AuthMessageComponent;
+
+  // queries the projected ngContent item(s) (outside)
+  @ContentChildren(AuthRememberComponent)
+  remember: QueryList<AuthRememberComponent>;
 
   @Output() submitted: EventEmitter<User> = new EventEmitter<User>();
 
-  ngAfterContentInit() {
-    if (this.remember) {
-      this.remember.checked.subscribe(
-        (checked: boolean) => (this.showMessage = checked)
-      );
+  ngDoCheck(): void {
+    //Called every time that the input properties of a component or a directive are checked. Use it to extend change detection by performing a custom check.
+    if (this.message) {
+      this.message.days = 30; // This does work.
     }
+  }
+
+  ngAfterContentInit() {
+    if (this.message) {
+      this.message.days = 30; // Should work, but doesn't re component isn't instantiated yet
+      // console.log(this.message.days);
+    }
+
+    if (this.remember) {
+      this.remember.forEach((item) => {
+        item.checked.subscribe(
+          (checked: boolean) => (this.showMessage = checked)
+        );
+      });
+    }
+  }
+
+  ngAfterViewInit() {
+    console.log(this.message);
   }
 
   onSubmit(value: User) {
