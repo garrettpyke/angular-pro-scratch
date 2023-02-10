@@ -2,12 +2,13 @@ import {
   Component,
   DoCheck,
   Output,
-  ViewChild,
+  ViewChildren,
   AfterViewInit,
   EventEmitter,
   QueryList,
   ContentChildren,
   AfterContentInit,
+  ChangeDetectorRef,
 } from '@angular/core';
 
 import { AuthRememberComponent } from './auth-remember.component';
@@ -33,6 +34,8 @@ import { User } from './auth-form.interface';
         <ng-content select="auth-remember"></ng-content>
         <auth-message [style.display]="showMessage ? 'inherit' : 'none'">
         </auth-message>
+        <auth-message [style.display]="showMessage ? 'inherit' : 'none'">
+        </auth-message>
         <ng-content select="button"></ng-content>
       </form>
     </div>
@@ -42,12 +45,12 @@ import { User } from './auth-form.interface';
 export class AuthFormComponent
   implements DoCheck, AfterContentInit, AfterViewInit
 {
-  constructor() {}
+  constructor(private cd: ChangeDetectorRef) {}
 
   showMessage: boolean;
 
   // a view child queries the view we're currently inside
-  @ViewChild(AuthMessageComponent) message: AuthMessageComponent;
+  @ViewChildren(AuthMessageComponent) message: QueryList<AuthMessageComponent>;
 
   // queries the projected ngContent item(s) (outside)
   @ContentChildren(AuthRememberComponent)
@@ -57,17 +60,12 @@ export class AuthFormComponent
 
   ngDoCheck(): void {
     //Called every time that the input properties of a component or a directive are checked. Use it to extend change detection by performing a custom check.
-    if (this.message) {
-      this.message.days = 30; // This does work.
-    }
+    // if (this.message) {
+    //   this.message.days = 30; // This does work.
+    // }
   }
 
   ngAfterContentInit() {
-    if (this.message) {
-      this.message.days = 30; // Should work, but doesn't re component isn't instantiated yet
-      // console.log(this.message.days);
-    }
-
     if (this.remember) {
       this.remember.forEach((item) => {
         item.checked.subscribe(
@@ -78,7 +76,12 @@ export class AuthFormComponent
   }
 
   ngAfterViewInit() {
-    console.log(this.message);
+    if (this.message) {
+      this.message.forEach((message) => {
+        message.days = 30;
+      });
+      this.cd.detectChanges();
+    }
   }
 
   onSubmit(value: User) {
