@@ -6,10 +6,10 @@ import { User } from './auth-form/auth-form.interface';
   selector: 'app-root',
   template: `
     <div>
-      <auth-form (submitted)="createUser($event)">
+      <!-- <auth-form (submitted)="createUser($event)">
         <h3>Create account</h3>
         <button type="submit">Join us</button>
-      </auth-form>
+      </auth-form> -->
       <auth-form (submitted)="loginUser($event)">
         <h3>Login</h3>
         <auth-remember (checked)="rememberUser($event)"></auth-remember>
