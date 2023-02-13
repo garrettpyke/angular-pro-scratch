@@ -1,12 +1,8 @@
 import {
-  AfterViewChecked,
-  AfterContentInit,
   AfterViewInit,
   Component,
-  ComponentFactoryResolver,
   ViewChild,
   ViewContainerRef,
-  DoCheck,
   ChangeDetectorRef,
 } from '@angular/core';
 
@@ -29,6 +25,7 @@ export class AppComponent implements AfterViewInit {
   constructor(private cd: ChangeDetectorRef) {}
 
   ngAfterViewInit() {
+    // using AfterViewInit b/c ViewChild is not available at AfterContentInit
     const component = this.entry.createComponent(AuthFormComponent);
     this.cd.detectChanges();
   }
