@@ -26,15 +26,10 @@ import { User } from './auth-form/auth-form.interface';
 export class AppComponent implements AfterViewInit {
   @ViewChild('entry', { read: ViewContainerRef }) entry: ViewContainerRef;
 
-  constructor(
-    private resolver: ComponentFactoryResolver,
-    private cd: ChangeDetectorRef
-  ) {}
+  constructor(private cd: ChangeDetectorRef) {}
 
   ngAfterViewInit() {
-    const authFormFactory =
-      this.resolver.resolveComponentFactory(AuthFormComponent);
-    const component = this.entry.createComponent(authFormFactory);
+    const component = this.entry.createComponent(AuthFormComponent);
     this.cd.detectChanges();
   }
 
