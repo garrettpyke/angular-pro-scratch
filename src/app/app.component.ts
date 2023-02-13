@@ -7,6 +7,7 @@ import {
   ViewChild,
   ViewContainerRef,
   DoCheck,
+  ChangeDetectorRef,
 } from '@angular/core';
 
 import { AuthFormComponent } from './auth-form/auth-form.component'; // importing b/c now injecting dynamically
@@ -25,12 +26,16 @@ import { User } from './auth-form/auth-form.interface';
 export class AppComponent implements AfterViewInit {
   @ViewChild('entry', { read: ViewContainerRef }) entry: ViewContainerRef;
 
-  constructor(private resolver: ComponentFactoryResolver) {}
+  constructor(
+    private resolver: ComponentFactoryResolver,
+    private cd: ChangeDetectorRef
+  ) {}
 
   ngAfterViewInit() {
     const authFormFactory =
       this.resolver.resolveComponentFactory(AuthFormComponent);
     const component = this.entry.createComponent(authFormFactory);
+    this.cd.detectChanges();
   }
 
   loginUser(user: User) {
