@@ -22,12 +22,14 @@ import { User } from './auth-form/auth-form.interface';
 export class AppComponent implements AfterViewInit {
   @ViewChild('entry', { read: ViewContainerRef }) entry: ViewContainerRef;
 
-  constructor(private cd: ChangeDetectorRef) {}
+  constructor() {}
 
   ngAfterViewInit() {
     // using AfterViewInit b/c ViewChild is not available at AfterContentInit
     const component = this.entry.createComponent(AuthFormComponent);
-    this.cd.detectChanges();
+    console.log(component);
+    component.instance.title = 'Create account';
+    component.changeDetectorRef.detectChanges();
   }
 
   loginUser(user: User) {
