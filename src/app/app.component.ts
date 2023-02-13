@@ -29,6 +29,7 @@ export class AppComponent implements AfterViewInit {
     const component = this.entry.createComponent(AuthFormComponent);
     console.log(component);
     component.instance.title = 'Create account';
+    component.instance.submitted.subscribe(this.loginUser); // subscribes to changes in dynamic output
     component.changeDetectorRef.detectChanges();
   }
 
