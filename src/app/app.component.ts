@@ -1,4 +1,15 @@
-import { Component } from '@angular/core';
+import {
+  AfterViewChecked,
+  AfterContentInit,
+  AfterViewInit,
+  Component,
+  ComponentFactoryResolver,
+  ViewChild,
+  ViewContainerRef,
+  DoCheck,
+} from '@angular/core';
+
+import { AuthFormComponent } from './auth-form/auth-form.component'; // importing b/c now injecting dynamically
 
 import { User } from './auth-form/auth-form.interface';
 
@@ -6,33 +17,23 @@ import { User } from './auth-form/auth-form.interface';
   selector: 'app-root',
   template: `
     <div>
-      <!-- <auth-form (submitted)="createUser($event)">
-        <h3>Create account</h3>
-        <button type="submit">Join us</button>
-      </auth-form> -->
-      <auth-form (submitted)="loginUser($event)">
-        <h3>Login</h3>
-        <auth-remember (checked)="rememberUser($event)"></auth-remember>
-        <button type="submit">Login</button>
-      </auth-form>
+      <div #entry></div>
     </div>
   `,
   styleUrls: ['./app.component.scss'],
 })
-export class AppComponent {
-  title = 'angular-pro-gp';
+export class AppComponent implements AfterViewInit {
+  @ViewChild('entry', { read: ViewContainerRef }) entry: ViewContainerRef;
 
-  rememberMe: boolean = false;
+  constructor(private resolver: ComponentFactoryResolver) {}
 
-  rememberUser(remember: boolean) {
-    this.rememberMe = remember;
-  }
-
-  createUser(user: User) {
-    console.log('Create account', user);
+  ngAfterViewInit() {
+    const authFormFactory =
+      this.resolver.resolveComponentFactory(AuthFormComponent);
+    const component = this.entry.createComponent(authFormFactory);
   }
 
   loginUser(user: User) {
-    console.log('Login', user, this.rememberMe);
+    console.log('Login', user);
   }
 }
