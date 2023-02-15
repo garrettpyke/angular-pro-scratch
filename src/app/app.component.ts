@@ -1,9 +1,11 @@
 import {
+  AfterContentInit,
   AfterViewInit,
   Component,
   ViewChild,
   ViewContainerRef,
   ComponentRef,
+  TemplateRef,
   ChangeDetectorRef,
 } from '@angular/core';
 
@@ -15,9 +17,8 @@ import { User } from './auth-form/auth-form.interface';
   selector: 'app-root',
   template: `
     <div>
-      <button (click)="destroyComponent()">Destroy</button>
-      <button (click)="moveComponent()">Move</button>
       <div #entry></div>
+      <ng-template #tmpl> Garrett Pyke : Utah, USA </ng-template>
     </div>
   `,
   styleUrls: ['./app.component.scss'],
@@ -27,18 +28,20 @@ export class AppComponent implements AfterViewInit {
 
   @ViewChild('entry', { read: ViewContainerRef }) entry: ViewContainerRef;
 
+  @ViewChild('tmpl') tmpl: TemplateRef<any>;
+
   constructor(private cd: ChangeDetectorRef) {}
 
   ngAfterViewInit() {
-    // using AfterViewInit b/c ViewChild is not available at AfterContentInit
-    this.entry.createComponent(AuthFormComponent);
-    this.component = this.entry.createComponent(AuthFormComponent, {
-      index: 0,
-    }); // index now displays this component first
-    this.component.instance.title = 'Create account';
-    this.component.instance.submitted.subscribe(this.loginUser); // subscribes to changes in dynamic output
+    //* using AfterViewInit b/c ViewChild is not available at AfterContentInit
+    // this.component = this.entry.createComponent(AuthFormComponent, {
+    // index: 0,
+    // }); // index now displays this component first
+    // this.component.instance.title = 'Create account';
+    // this.component.instance.submitted.subscribe(this.loginUser); // subscribes to changes in dynamic output
+    // this.component.changeDetectorRef.detectChanges();
 
-    this.cd.detectChanges();
+    this.entry.createEmbeddedView(this.tmpl);
   }
 
   destroyComponent() {
