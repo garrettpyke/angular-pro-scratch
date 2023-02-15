@@ -47,7 +47,7 @@ export class AppComponent implements AfterViewInit {
   }
 
   moveComponent() {
-    this.entry.move(this.component.hostView, 1);
+    this.entry.move(this.component.hostView, 1); // set index to 1
   }
 
   loginUser(user: User) {
