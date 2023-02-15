@@ -18,7 +18,9 @@ import { User } from './auth-form/auth-form.interface';
   template: `
     <div>
       <div #entry></div>
-      <ng-template #tmpl> Garrett Pyke : Utah, USA </ng-template>
+      <ng-template #tmpl let-potato let-location="location">
+        {{ potato }} : {{ location }}
+      </ng-template>
     </div>
   `,
   styleUrls: ['./app.component.scss'],
@@ -30,18 +32,16 @@ export class AppComponent implements AfterViewInit {
 
   @ViewChild('tmpl') tmpl: TemplateRef<any>;
 
-  constructor(private cd: ChangeDetectorRef) {}
+  constructor() {}
 
   ngAfterViewInit() {
     //* using AfterViewInit b/c ViewChild is not available at AfterContentInit
-    // this.component = this.entry.createComponent(AuthFormComponent, {
-    // index: 0,
-    // }); // index now displays this component first
-    // this.component.instance.title = 'Create account';
-    // this.component.instance.submitted.subscribe(this.loginUser); // subscribes to changes in dynamic output
-    // this.component.changeDetectorRef.detectChanges();
+    this.entry.createEmbeddedView(this.tmpl, {
+      $implicit: 'Pyke Garrett', // note that the variable only line 21/22 isn't defined the way location is
+      location: 'USA, Utah',
+    });
 
-    this.entry.createEmbeddedView(this.tmpl);
+    this.entry.get(0).detectChanges();
   }
 
   destroyComponent() {
