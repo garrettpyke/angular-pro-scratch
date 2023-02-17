@@ -17,10 +17,20 @@ import { User } from './auth-form/auth-form.interface';
   selector: 'app-root',
   template: `
     <div>
-      <ng-container [ngTemplateOutlet]="tmpl"> </ng-container>
-      <ng-template #tmpl> Garrett Pyke : Utah, USA </ng-template>
+      <ng-container
+        [ngTemplateOutlet]="tmpl"
+        [ngTemplateOutletContext]="ctxt"
+      ></ng-container>
+      <ng-template #tmpl let-name let-location="location">
+        {{ name }} : {{ location }}
+      </ng-template>
     </div>
   `,
   styleUrls: ['./app.component.scss'],
 })
-export class AppComponent {}
+export class AppComponent {
+  ctxt = {
+    $implicit: 'Pyke Garrett',
+    location: 'USA, Utah',
+  };
+}
