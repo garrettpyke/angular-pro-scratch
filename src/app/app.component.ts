@@ -17,43 +17,10 @@ import { User } from './auth-form/auth-form.interface';
   selector: 'app-root',
   template: `
     <div>
-      <div #entry></div>
-      <ng-template #tmpl let-potato let-location="location">
-        {{ potato }} : {{ location }}
-      </ng-template>
+      <ng-container [ngTemplateOutlet]="tmpl"> </ng-container>
+      <ng-template #tmpl> Garrett Pyke : Utah, USA </ng-template>
     </div>
   `,
   styleUrls: ['./app.component.scss'],
 })
-export class AppComponent implements AfterViewInit {
-  component: ComponentRef<AuthFormComponent>;
-
-  @ViewChild('entry', { read: ViewContainerRef }) entry: ViewContainerRef;
-
-  @ViewChild('tmpl') tmpl: TemplateRef<any>;
-
-  constructor() {}
-
-  ngAfterViewInit() {
-    //* using AfterViewInit b/c ViewChild is not available at AfterContentInit
-    this.entry.createEmbeddedView(this.tmpl, {
-      $implicit: 'Pyke Garrett', // note that the variable only line 21/22 isn't defined the way location is
-      location: 'USA, Utah',
-    });
-
-    this.entry.get(0).detectChanges();
-  }
-
-  destroyComponent() {
-    // destroys dynamically created component
-    this.component.destroy();
-  }
-
-  moveComponent() {
-    this.entry.move(this.component.hostView, 1); // set index to 1
-  }
-
-  loginUser(user: User) {
-    console.log('Login', user);
-  }
-}
+export class AppComponent {}
